@@ -5,7 +5,7 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileWriter
-import java.util.Scanner
+import java.util.*
 
 fun parse_to_json(file_lines: MutableList<String>): JSONObject {
     val info: JSONObject = JSONObject()
@@ -155,7 +155,12 @@ fun get_items(info: JSONObject, item: Int): Set<String> {
 
 fun main() {
     // Read input from a .txt file
-    val file_path: String = "Casual Roleplay Base.txt"
+    val input: Scanner = Scanner(System.`in`)
+    println("Welcome! You will need to enter in the location of your file.")
+    print("Enter in the ABSOLUTE file path of the base txt file: ")
+    var file_path: String = input.nextLine()
+    file_path = file_path.replace('"', ' ').trim()
+
     val file_lines: MutableList<String> = mutableListOf();
 
     // Try to retrieve the text from the file
@@ -178,11 +183,12 @@ fun main() {
     val characters: Set<String> = get_items(parse_json, 1)
     val locations: Set<String> = get_items(parse_json, 2)
     val songs: Set<String> = get_items(parse_json, 3)
-
+    
     // Save the parsed JSON information to a folder
-    val output_dir: String = "Output"
-    val output_name: String = "Casual_Roleplay"
-    val output_path: String = "$output_dir/$output_name"
+    val parent_dir = File(file_path).getParent()
+    val output_dir = "$parent_dir/Output"
+    val output_name = "Casual_Roleplay"
+    val output_path = "$output_dir/$output_name"
 
     val dir_created: Boolean = when {
         !File(output_dir).exists() -> File(output_dir).mkdir()
